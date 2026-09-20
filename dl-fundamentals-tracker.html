@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Deep learning fundamentals — 28 sessions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E9EDF0; --surface:#FFFFFF; --ink:#10181F; --muted:#5A6B79;
+  --line:#D2DAE0; --cyan:#00879A; --cyan-soft:#D6EFF2; --magenta:#B32A6B;
+  --shadow:0 1px 0 rgba(16,24,31,.06);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1216; --surface:#151D23; --ink:#E7EDF1; --muted:#90A2AE;
+    --line:#26323A; --cyan:#35C6D6; --cyan-soft:#10333A; --magenta:#F072A9;
+    --shadow:0 1px 0 rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1216; --surface:#151D23; --ink:#E7EDF1; --muted:#90A2AE;
+  --line:#26323A; --cyan:#35C6D6; --cyan-soft:#10333A; --magenta:#F072A9;
+  --shadow:0 1px 0 rgba(0,0,0,.4);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 16px);scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none !important}}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Archivo","Helvetica Neue",Arial,sans-serif;
+  font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 80px}
+
+/* header */
+.masthead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:34px}
+h1{font-size:clamp(28px,5.2vw,42px);line-height:1.08;letter-spacing:-.022em;font-weight:700;margin:0 0 10px}
+.standfirst{font-family:"Source Serif 4",Georgia,serif;font-size:17px;line-height:1.55;color:var(--muted);max-width:52ch;margin:0}
+.toggle{flex:none;background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;
+  padding:7px 14px;font:inherit;font-size:13px;cursor:pointer}
+.toggle:hover{color:var(--ink);border-color:var(--ink)}
+
+/* hero */
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:24px;box-shadow:var(--shadow);margin-bottom:28px}
+.tally{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin-bottom:6px}
+.tally .count{font-size:clamp(40px,9vw,62px);font-weight:700;letter-spacing:-.03em;line-height:1}
+.tally .count b{color:var(--cyan);font-weight:700}
+.tally .meta{font-family:"Source Serif 4",Georgia,serif;color:var(--muted);font-size:16px}
+.bar{height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin:18px 0 22px}
+.bar span{display:block;height:100%;width:0;background:var(--cyan);transition:width .35s ease}
+.grid{display:grid;grid-template-columns:repeat(14,1fr);gap:6px}
+@media (max-width:560px){.grid{grid-template-columns:repeat(7,1fr)}}
+.cell{aspect-ratio:1;border:1.5px dashed var(--line);border-radius:3px;background:transparent;color:var(--muted);
+  font:inherit;font-size:11px;font-weight:500;cursor:pointer;padding:0;display:grid;place-items:center;transition:all .18s ease}
+.cell:hover{border-color:var(--ink);color:var(--ink)}
+.cell.done{background:var(--cyan);border:1.5px solid var(--cyan);color:var(--surface)}
+.cell.next{border:1.5px solid var(--magenta);color:var(--magenta);font-weight:700}
+.cell:focus-visible{outline:2px solid var(--magenta);outline-offset:2px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend .l1 i{background:var(--cyan)}
+.legend .l2 i{border:1.5px solid var(--magenta)}
+.legend .l3 i{border:1.5px dashed var(--line)}
+
+/* rhythm */
+.rhythm{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-bottom:44px}
+@media (max-width:560px){.rhythm{grid-template-columns:repeat(2,1fr)}}
+.rhythm div{background:var(--surface);padding:14px 16px}
+.rhythm b{display:block;font-size:20px;font-weight:600;letter-spacing:-.02em}
+.rhythm p{margin:2px 0 0;font-family:"Source Serif 4",Georgia,serif;font-size:14px;color:var(--muted);line-height:1.35}
+
+/* weeks */
+.week{margin-bottom:44px}
+.week-head{display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:0}
+.week-head h2{font-size:21px;font-weight:600;letter-spacing:-.018em;margin:0}
+.week-head .wn{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:auto;flex:none}
+.days{list-style:none;margin:0;padding:0}
+.day{border-bottom:1px solid var(--line);background:var(--surface)}
+.day.done{background:var(--cyan-soft)}
+.row{display:flex;gap:14px;align-items:flex-start;padding:15px 16px;cursor:pointer}
+.row input{flex:none;width:19px;height:19px;margin:2px 0 0;accent-color:var(--cyan);cursor:pointer}
+.n{flex:none;width:26px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
+.day.done .n{color:var(--cyan)}
+.txt{flex:1;min-width:0}
+.txt h3{margin:0;font-size:16.5px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.day.done .txt h3{text-decoration:line-through;text-decoration-color:var(--cyan);text-decoration-thickness:1.5px;opacity:.62}
+.txt p{margin:4px 0 0;font-family:"Source Serif 4",Georgia,serif;font-size:15px;line-height:1.5;color:var(--muted);max-width:62ch}
+.why{padding:0 16px 18px 75px}
+.why blockquote{margin:0 0 12px;padding-left:14px;border-left:2px solid var(--magenta);
+  font-family:"Source Serif 4",Georgia,serif;font-size:15px;line-height:1.5;max-width:60ch}
+.why blockquote em{color:var(--magenta);font-style:italic}
+.why textarea{width:100%;max-width:60ch;min-height:58px;resize:vertical;background:var(--paper);
+  border:1px solid var(--line);border-radius:3px;color:var(--ink);font:inherit;font-size:14.5px;padding:9px 11px}
+.why textarea:focus{outline:2px solid var(--cyan);outline-offset:-1px;border-color:transparent}
+.why label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
+.checkpoint{margin-top:14px;padding:13px 16px;border:1px dashed var(--line);border-radius:4px;
+  font-family:"Source Serif 4",Georgia,serif;font-size:15px;line-height:1.5;color:var(--muted)}
+.checkpoint b{font-family:"Archivo",sans-serif;font-size:13px;font-weight:600;color:var(--ink);display:block;margin-bottom:3px;letter-spacing:.01em}
+
+/* resources + footer */
+.res h2{font-size:21px;font-weight:600;letter-spacing:-.018em;margin:0 0 4px}
+.res ul{list-style:none;margin:14px 0 0;padding:0}
+.res li{padding:11px 0;border-bottom:1px solid var(--line);font-family:"Source Serif 4",Georgia,serif;font-size:15.5px;line-height:1.45}
+.res li b{font-family:"Archivo",sans-serif;font-size:14px;font-weight:600;color:var(--ink);display:block}
+.res a{color:var(--cyan)}
+footer{margin-top:46px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+  font-size:13px;color:var(--muted)}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer}
+.reset:hover{color:var(--magenta);border-color:var(--magenta)}
+:focus-visible{outline:2px solid var(--magenta);outline-offset:2px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="masthead">
+  <div>
+    <h1>Deep learning fundamentals</h1>
+    <p class="standfirst">Twenty-eight sessions of two hours, built to end exactly where your research starts: boundary- and size-aware failure detection for polyp segmentation.</p>
+  </div>
+  <button class="toggle" id="theme" type="button">Dark</button>
+</div>
+
+<section class="hero">
+  <div class="tally">
+    <div class="count"><b id="doneCount">0</b> / 28</div>
+    <div class="meta"><span id="hours">0</span> of 56 hours logged<span id="leftNote"></span></div>
+  </div>
+  <div class="bar"><span id="barFill"></span></div>
+  <div class="grid" id="grid"></div>
+  <div class="legend">
+    <span class="l1"><i></i>Finished</span>
+    <span class="l2"><i></i>Up next</span>
+    <span class="l3"><i></i>Not started</span>
+  </div>
+</section>
+
+<div class="rhythm">
+  <div><b>45 min</b><p>Watch or read the day's topic</p></div>
+  <div><b>45 min</b><p>Code a tiny version of it yourself</p></div>
+  <div><b>20 min</b><p>Write the idea in your own words</p></div>
+  <div><b>10 min</b><p>Log what still confuses you</p></div>
+</div>
+
+<main id="weeks"></main>
+
+<section class="res">
+  <h2>Core resources</h2>
+  <p class="standfirst">Pick one per layer. Collecting more is a way of avoiding the work.</p>
+  <ul>
+    <li><b>Foundations</b>Andrew Ng's Deep Learning Specialization, courses 1, 2 and 4 — or fast.ai Practical Deep Learning if you prefer code first.</li>
+    <li><b>Reference text</b>Dive into Deep Learning, free and PyTorch-based — <a href="https://d2l.ai" target="_blank" rel="noopener">d2l.ai</a></li>
+    <li><b>Vision depth</b>Stanford CS231n lecture notes — <a href="https://cs231n.github.io" target="_blank" rel="noopener">cs231n.github.io</a></li>
+    <li><b>Code fluency</b>The official PyTorch tutorials, starting with the 60 Minute Blitz.</li>
+    <li><b>Your subfield</b>Comparative Benchmarking of Failure Detection Methods in Medical Image Segmentation — <a href="https://arxiv.org/abs/2406.03323" target="_blank" rel="noopener">arxiv.org/abs/2406.03323</a></li>
+  </ul>
+</section>
+
+<footer>
+  <span>Progress is stored in this browser only. Nothing is uploaded.</span>
+  <button class="reset" id="reset" type="button">Clear all progress</button>
+</footer>
+</div>
+
+<script>
+const WEEKS = [
+ {t:"How a neural network learns",
+  c:"Explain out loud what happens to a single weight between two training steps.",
+  d:[
+   ["Supervised learning, by hand","Inputs, labels, and a function with adjustable numbers inside. Build linear regression in NumPy and fit it yourself.","Segmentation is this same idea, with an image going in and an image coming out."],
+   ["Loss and gradient descent","Watch 3Blue1Brown's four-part neural network series. Then plot a loss curve and walk down it step by step.","Failure, in your topic, is ultimately a loss or a metric coming out bad."],
+   ["Backpropagation","Follow the chain rule assigning blame backwards through a small network. Understand the flow; don't memorise the algebra.","Explains why deep models can be trained at all, and why gradients vanish."],
+   ["PyTorch basics","Tensors, autograd, nn.Module, optimizers. Work through the official 60 Minute Blitz.","Every paper's released code is written in this."],
+   ["A training loop from scratch","Two-layer network on a toy dataset: forward, loss, backward, step. No helper classes.","If you can write this from memory, everything after it is a variation."],
+   ["Overfitting and regularisation","Train, validation and test splits. Weight decay, early stopping, dropout.","Dropout returns in week four as a way of measuring uncertainty, so learn it properly now."],
+   ["The knobs","Activation functions, batch normalisation, learning rate, batch size. Then catch up on anything unfinished.","These are the settings quoted in every method section you will read."]
+  ]},
+ {t:"How networks see images and draw masks",
+  c:"Sketch U-Net from memory and say what each skip connection carries.",
+  d:[
+   ["Convolution","Kernels, stride, padding, feature maps. Convolve a small image by hand in NumPy.","The core operation behind everything in your field."],
+   ["Pooling and receptive field","How early layers see edges and deep layers see whole objects.","Boundary information lives in the early layers. That single fact drives every boundary-aware paper."],
+   ["Backbone networks","VGG, then ResNet and skip connections, then a quick look at EfficientNet.","ResNet is the default encoder in polyp segmentation papers."],
+   ["Classification, detection, segmentation","Where each task ends. Semantic against instance segmentation. Pixel-wise prediction.","Places your task precisely on the map."],
+   ["Encoder, decoder, FCN","Downsample to understand, upsample to localise. Transposed convolution against bilinear upsampling.","Explains the silhouette of every segmentation network you'll meet."],
+   ["U-Net","Read the 2015 paper. Redraw the architecture from memory, then skim U-Net++ and Attention U-Net.","Still the backbone of medical image segmentation."],
+   ["Transformers, gently","Self-attention in one paragraph, then ViT and SegFormer. Why hybrid CNN-transformer models dominate now.","Most recent polyp papers are hybrids. You need to read them without panic."]
+  ]},
+ {t:"Judging a mask, and the polyp domain",
+  c:"Given a results table, name the metric that is hiding small-polyp failure, and say why it hides it.",
+  d:[
+   ["From confusion matrix to Dice","True and false positives and negatives, precision, recall. Then IoU and Dice, and how the two relate.","The vocabulary of every results table.",],
+   ["Why Dice punishes small objects","Work Dice out by hand for a 20-pixel polyp and a 5,000-pixel polyp with the same five-pixel error.","This one exercise is the seed of the size-aware half of your topic."],
+   ["Boundary metrics","Hausdorff distance and HD95, average surface distance, normalised surface Dice, Boundary IoU. Learn what a distance transform does.","The boundary-aware half. Read the Boundary IoU paper alongside it."],
+   ["Choosing metrics properly","Read Metrics Reloaded, or a careful summary of it.","Gives you the language reviewers expect when you justify a metric choice."],
+   ["Segmentation losses","Cross-entropy, Dice loss, Tversky, focal, boundary loss. Class imbalance when a polyp is three percent of the frame.","Explains why small polyps are systematically under-learned."],
+   ["The clinical picture","What a colonoscopy is, what polyps look like, why flat, small and low-contrast ones get missed, what a miss rate means.","Your motivation paragraph has to be credible to clinicians, not only to engineers."],
+   ["The datasets","Kvasir-SEG, CVC-ClinicDB, CVC-ColonDB, ETIS-Larib, CVC-300, PolypGen, SUN-SEG. The standard training split and the generalisation split.","Without this you cannot read a results table or judge whether a claim is impressive."]
+  ]},
+ {t:"Doubt, calibration and failure detection",
+  c:"Explain to a non-expert how a model can produce a confident, well-formed, completely wrong polyp mask.",
+  d:[
+   ["Probability against confidence","Sigmoid and softmax outputs, what a pixel value of 0.6 actually means, entropy as a measure of doubt.","The raw material of every failure signal."],
+   ["Calibration","Overconfidence in deep networks, reliability diagrams, expected calibration error, temperature scaling. Read Guo et al., 2017.","A model can be accurate and badly calibrated at the same time. Your topic lives in that gap."],
+   ["Two kinds of uncertainty","Aleatoric, meaning noise in the data, against epistemic, meaning ignorance of the model. Read one survey section, not the whole survey.","The standard framing, and you have to use it correctly in writing."],
+   ["Practical uncertainty methods","Monte Carlo dropout, deep ensembles, test-time augmentation. What each one actually measures.","These become the baselines you will have to beat."],
+   ["Failure detection as its own task","Read the benchmarking paper, arXiv 2406.03323. Note its three families: uncertainty aggregation, out-of-distribution detection, quality regression.","The single most important paper for your topic. Read it twice."],
+   ["Scoring a failure detector","AUROC, AUPRC, risk-coverage curves and AURC, Spearman correlation between predicted and true quality. Then study confidence aggregation: how per-pixel scores become one score per image.","Aggregation is exactly where boundary weighting and size normalisation would enter."],
+   ["Consolidate","Write two pages connecting all four layers in your own words, then list the ten questions you still cannot answer.","That list of gaps is your actual research agenda."]
+  ]}
+];
+
+const KEY = "dl-fundamentals-28";
+let state = {done:{}, notes:{}, theme:null};
+
+function load(){
+  try{ const raw = localStorage.getItem(KEY); if(raw) state = Object.assign(state, JSON.parse(raw)); }
+  catch(e){ /* storage unavailable; run without persistence */ }
+}
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){}
+}
+
+function build(){
+  const weeksEl = document.getElementById("weeks");
+  let n = 0;
+  WEEKS.forEach((w,wi)=>{
+    const sec = document.createElement("section");
+    sec.className = "week";
+    const head = document.createElement("div");
+    head.className = "week-head";
+    head.innerHTML = '<h2>'+w.t+'</h2><span class="wn" id="wc'+wi+'"></span>';
+    sec.appendChild(head);
+    const ul = document.createElement("ul");
+    ul.className = "days";
+    w.d.forEach(day=>{
+      n++;
+      const id = n;
+      const li = document.createElement("li");
+      li.className = "day";
+      li.id = "day"+id;
+      li.dataset.day = id;
+      li.innerHTML =
+        '<div class="row">'+
+          '<input type="checkbox" id="cb'+id+'" aria-label="Mark day '+id+' finished">'+
+          '<span class="n">'+id+'</span>'+
+          '<div class="txt"><h3>'+day[0]+'</h3><p>'+day[1]+'</p></div>'+
+        '</div>'+
+        '<div class="why hidden">'+
+          '<blockquote><em>Why this matters.</em> '+day[2]+'</blockquote>'+
+          '<label for="nt'+id+'">Your note for day '+id+'</label>'+
+          '<textarea id="nt'+id+'" placeholder="What clicked, what did not"></textarea>'+
+        '</div>';
+      ul.appendChild(li);
+
+      const cb = li.querySelector("input");
+      const why = li.querySelector(".why");
+      const ta = li.querySelector("textarea");
+      cb.checked = !!state.done[id];
+      ta.value = state.notes[id] || "";
+      li.classList.toggle("done", cb.checked);
+
+      cb.addEventListener("change", ()=>{
+        state.done[id] = cb.checked; if(!cb.checked) delete state.done[id];
+        li.classList.toggle("done", cb.checked); save(); refresh();
+      });
+      li.querySelector(".row").addEventListener("click", e=>{
+        if(e.target === cb) return;
+        why.classList.toggle("hidden");
+      });
+      ta.addEventListener("input", ()=>{
+        state.notes[id] = ta.value; if(!ta.value) delete state.notes[id]; save();
+      });
+    });
+    sec.appendChild(ul);
+    const cp = document.createElement("div");
+    cp.className = "checkpoint";
+    cp.innerHTML = "<b>Checkpoint before moving on</b>" + w.c;
+    sec.appendChild(cp);
+    weeksEl.appendChild(sec);
+  });
+
+  const grid = document.getElementById("grid");
+  for(let i=1;i<=28;i++){
+    const b = document.createElement("button");
+    b.type="button"; b.className="cell"; b.textContent=i; b.id="c"+i;
+    b.setAttribute("aria-label","Go to day "+i);
+    b.addEventListener("click",()=>{
+      const li = document.getElementById("day"+i);
+      li.querySelector(".why").classList.remove("hidden");
+      li.scrollIntoView({block:"center"});
+    });
+    grid.appendChild(b);
+  }
+}
+
+function refresh(){
+  let total = 0;
+  for(let i=1;i<=28;i++){
+    const done = !!state.done[i];
+    if(done) total++;
+    const c = document.getElementById("c"+i);
+    c.classList.toggle("done", done);
+    c.classList.remove("next");
+  }
+  let next = 0;
+  for(let i=1;i<=28;i++){ if(!state.done[i]){ next=i; break; } }
+  if(next) document.getElementById("c"+next).classList.add("next");
+
+  document.getElementById("doneCount").textContent = total;
+  document.getElementById("hours").textContent = total*2;
+  document.getElementById("barFill").style.width = (total/28*100)+"%";
+  document.getElementById("leftNote").textContent =
+    total===28 ? " — all twenty-eight done" : (next ? " — day "+next+" is up next" : "");
+
+  let n=0;
+  WEEKS.forEach((w,wi)=>{
+    let d=0;
+    w.d.forEach(()=>{ n++; if(state.done[n]) d++; });
+    document.getElementById("wc"+wi).textContent = d+" of "+w.d.length+" done";
+  });
+}
+
+function applyTheme(){
+  const t = state.theme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark":"light");
+  document.documentElement.setAttribute("data-theme", t);
+  document.getElementById("theme").textContent = t==="dark" ? "Light" : "Dark";
+}
+
+load();
+build();
+refresh();
+applyTheme();
+
+document.getElementById("theme").addEventListener("click", ()=>{
+  const cur = document.documentElement.getAttribute("data-theme");
+  state.theme = cur==="dark" ? "light" : "dark";
+  save(); applyTheme();
+});
+document.getElementById("reset").addEventListener("click", ()=>{
+  if(!confirm("Clear every tick and note? This cannot be undone.")) return;
+  state.done = {}; state.notes = {}; save();
+  document.querySelectorAll(".day").forEach(li=>{
+    li.classList.remove("done");
+    li.querySelector("input").checked = false;
+    li.querySelector("textarea").value = "";
+  });
+  refresh();
+});
+</script>
+</body>
+</html>
